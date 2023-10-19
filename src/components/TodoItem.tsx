@@ -15,6 +15,7 @@ import {
 } from '@mui/material'
 import { modalInnerStyle } from '../styles/modal'
 import { toggleLabels } from '../lib/toggleLabels'
+import PriorityChip from './PriorityChip'
 
 type Props = {
   todo: Todo
@@ -29,7 +30,7 @@ const TodoItem: FC<Props> = ({ todo, onUpdate, onDelete, labels }) => {
   const [editLabels, setEditLabels] = useState<Label[]>([]) 
 
   // todo変更時に初期化
-  useEffect(() => { 
+  useEffect(() => {
     setEditText(todo.text)
     setEditLabels(todo.labels)
   }, [todo, editing])
@@ -47,6 +48,7 @@ const TodoItem: FC<Props> = ({ todo, onUpdate, onDelete, labels }) => {
       id: todo.id,
       text: editText,
       completed: todo.completed,
+      priority: todo.priority,
       labels: editLabels.map((label) => label.id),
     })
     setEditing(false)
@@ -72,6 +74,9 @@ const TodoItem: FC<Props> = ({ todo, onUpdate, onDelete, labels }) => {
               {todo.labels?.map((label) => (
                 <Chip key={label.id} label={label.name} size="small" />
               ))}
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <PriorityChip priority={todo.priority} />
             </Stack>
           </Stack>
         </Grid>
