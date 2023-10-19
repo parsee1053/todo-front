@@ -12,6 +12,8 @@ import {
   Checkbox,
   TextField,
   FormControlLabel,
+  Radio,
+  RadioGroup,
 } from '@mui/material'
 import { modalInnerStyle } from '../styles/modal'
 import { toggleLabels } from '../lib/toggleLabels'
@@ -27,12 +29,14 @@ type Props = {
 const TodoItem: FC<Props> = ({ todo, onUpdate, onDelete, labels }) => {
   const [editing, setEditing] = useState(false)
   const [editText, setEditText] = useState("")
-  const [editLabels, setEditLabels] = useState<Label[]>([]) 
+  const [editLabels, setEditLabels] = useState<Label[]>([])
+  const [editPriority, setEditPriority] = useState(1)
 
   // todo変更時に初期化
   useEffect(() => {
     setEditText(todo.text)
     setEditLabels(todo.labels)
+    setEditPriority(todo.priority)
   }, [todo, editing])
 
   const handleCompletedCheckbox: ChangeEventHandler = (e) => {
@@ -48,7 +52,7 @@ const TodoItem: FC<Props> = ({ todo, onUpdate, onDelete, labels }) => {
       id: todo.id,
       text: editText,
       completed: todo.completed,
-      priority: todo.priority,
+      priority: editPriority,
       labels: editLabels.map((label) => label.id),
     })
     setEditing(false)
@@ -116,6 +120,17 @@ const TodoItem: FC<Props> = ({ todo, onUpdate, onDelete, labels }) => {
                   onChange={() => setEditLabels((prev) => toggleLabels(prev, label))}
                 />
               ))}
+            </Stack>
+            <Stack>
+              <Typography variant="subtitle1">Priority</Typography>
+              <RadioGroup
+                defaultValue={todo.priority}
+                onChange={(e) => setEditPriority(parseInt(e.target.value))}
+              >
+                <FormControlLabel value="0" control={<Radio />} label="low" />
+                <FormControlLabel value="1" control={<Radio />} label="normal" />
+                <FormControlLabel value="2" control={<Radio />} label="high" />
+              </RadioGroup>
             </Stack>
           </Stack>
         </Box>
